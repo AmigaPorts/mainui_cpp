@@ -97,13 +97,25 @@ def build(bld):
 		'sdk_includes/pm_shared'
 	]
 
-	bld.shlib(
-		source   = source,
-		target   = 'menu',
-		features = 'cxx',
-		includes = includes,
-		use      = libs,
-		install_path = bld.env.LIBDIR,
-		subsystem = bld.env.MSVC_SUBSYSTEM,
-		cmake_skip = True
-	)
+	if bld.env.AMIGA:
+		bld.stlib(
+			source   = source,
+			target   = 'menu',
+			features = 'cxx',
+			includes = includes,
+			use      = libs,
+			install_path = bld.env.LIBDIR,
+			subsystem = bld.env.MSVC_SUBSYSTEM,
+			cmake_skip = True
+		)
+	else:
+		bld.shlib(
+			source   = source,
+			target   = 'menu',
+			features = 'cxx',
+			includes = includes,
+			use      = libs,
+			install_path = bld.env.LIBDIR,
+			subsystem = bld.env.MSVC_SUBSYSTEM,
+			cmake_skip = True
+		)
