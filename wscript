@@ -56,7 +56,10 @@ def configure(conf):
 
 	if conf.env.AMIGA:
 		conf.define('NO_STL', 1)
-		conf.env.append_unique('CXXFLAGS', '-noixemul -m68040 -mhard-float')
+		conf.env.append_unique('CXXFLAGS', '-noixemul')
+		conf.env.append_unique('CXXFLAGS', '-m68040')
+		conf.env.append_unique('CXXFLAGS', '-mhard-float')
+		conf.env.append_unique('CXXFLAGS', '-fbbb=-')
 
 	if conf.env.DEST_OS != 'win32' and conf.env.DEST_OS != 'dos':
 		if not conf.env.USE_STBTT and not conf.options.LOW_MEMORY:
@@ -101,25 +104,13 @@ def build(bld):
 		'sdk_includes/pm_shared'
 	]
 
-	if bld.env.AMIGA:
-		bld.stlib(
-			source   = source,
-			target   = 'menu',
-			features = 'cxx',
-			includes = includes,
-			use      = libs,
-			install_path = bld.env.LIBDIR,
-			subsystem = bld.env.MSVC_SUBSYSTEM,
-			cmake_skip = True
-		)
-	else:
-		bld.shlib(
-			source   = source,
-			target   = 'menu',
-			features = 'cxx',
-			includes = includes,
-			use      = libs,
-			install_path = bld.env.LIBDIR,
-			subsystem = bld.env.MSVC_SUBSYSTEM,
-			cmake_skip = True
-		)
+	bld.stlib(
+		source   = source,
+		target   = 'menu',
+		features = 'cxx',
+		includes = includes,
+		use      = libs,
+		install_path = bld.env.LIBDIR,
+		subsystem = bld.env.MSVC_SUBSYSTEM,
+		cmake_skip = True
+	)
