@@ -59,7 +59,7 @@ def configure(conf):
 		conf.env.append_unique('CXXFLAGS', '-noixemul')
 		conf.env.append_unique('CXXFLAGS', '-m68040')
 		conf.env.append_unique('CXXFLAGS', '-mhard-float')
-		conf.env.append_unique('CXXFLAGS', '-fbbb=-')
+		#conf.env.append_unique('CXXFLAGS', '-fbbb=-')
 
 	if conf.env.DEST_OS != 'win32' and conf.env.DEST_OS != 'dos':
 		if not conf.env.USE_STBTT and not conf.options.LOW_MEMORY:
@@ -104,10 +104,24 @@ def build(bld):
 		'sdk_includes/pm_shared'
 	]
 
-	bld.stlib(
+	library = 'cxxshlib'
+
+	if bld.env.DEST_OS == 'amiga':
+		library = 'cprogram'
+		bld.env.POSTFIX = ".so"
+		bld.env.PREFIX = "lib"
+
+		source += bld.path.parent.parent.ant_glob([
+			'os_specific/amiga/main.c'
+		])
+	else:
+		bld.env.POSTFIX = ""
+
+	features = ['cxx', library]
+
+	bld(target = 'menu' + bld.env.POSTFIX,
+		features = features,
 		source   = source,
-		target   = 'menu',
-		features = 'cxx',
 		includes = includes,
 		use      = libs,
 		install_path = bld.env.LIBDIR,
